@@ -43,7 +43,7 @@
           required: true
           schema:
             ${DOLLAR}ref: '#/definitions/${uncapitalizedEntityName}" )
-#if( $entity.keyAttribute.isAutoIncremented() )
+#if( $entity.keyAttributes.size() <= 1 && $entity.keyAttribute.isAutoIncremented() )
 #set ( $bodyParameters = $bodyParameters+"NotId" )
 #end
 #set ( $bodyParameters = $bodyParameters+"'" )
@@ -134,7 +134,7 @@ ${bodyParameters}
       tags:
         - ${entity.name}
       summary: Save a ${entity.name}
-#if( !$entity.keyAttribute.isAutoIncremented() )      description: Creation if entity not exists (201 created)
+#if( $entity.keyAttributes.size() <= 1 && !$entity.keyAttribute.isAutoIncremented() )      description: Creation if entity not exists (201 created)
 #else      description: The entity has key attribute is auto incremented. It's not possible to fill it in.
 #end
       produces:
@@ -142,7 +142,7 @@ ${bodyParameters}
       parameters:
 ${bodyParameters}
       responses:
-#if( !$entity.keyAttribute.isAutoIncremented() )
+#if( $entity.keyAttributes.size() <= 1 && !$entity.keyAttribute.isAutoIncremented() )
         '200':
           description: Successful Update
           schema:
@@ -204,7 +204,7 @@ definitions:
         maximum: $field.databaseSize
 #end
 #end
-#if( $entity.keyAttribute.isAutoIncremented() )
+#if( $entity.keyAttributes.size() <= 1 && $entity.keyAttribute.isAutoIncremented() )
   ${uncapitalizedEntityName}NotId:
     type: object
     required:
